@@ -3,9 +3,9 @@
 "               Permission is hereby granted to use and distribute this code,
 "               with or without modifications, provided that this copyright
 "               notice is copied with it. Like anything else that's free,
-"               dwm.vim is provided *as is* and comes with no warranty of 
-"               any kind, either expressed or implied. In no event will the 
-"               copyright holder be liable for any damages resulting from 
+"               dwm.vim is provided *as is* and comes with no warranty of
+"               any kind, either expressed or implied. In no event will the
+"               copyright holder be liable for any damages resulting from
 "               the use of this software.
 " Name Of File: dwm.vim
 "  Description: Dynamic Window Manager behaviour for Vim
@@ -32,20 +32,26 @@ if v:version < 700
   finish
 endif
 
+command! -n=0 -bar DWMNew call s:DWM_New()
+command! -n=0 -bar DWMClose call s:DWM_Close()
+command! -n=0 -bar DWMFocus call s:DWM_Focus()
+command! -n=0 -bar DWMFull call s:DWM_Full()
+command! -n=0 -bar DWMBall call s:DWM_Ball()
+
 " Script Array for storing Buffer order
 let s:dwm_bufs = []
 
-function! DWM_BufCount() 
-  let cnt = 0 
-  for nr in range(1,bufnr("$")) 
-    if buflisted(nr) 
-      let cnt += 1 
-    endif 
-  endfor 
-  return cnt 
-endfunction 
+function! s:DWM_BufCount()
+  let cnt = 0
+  for nr in range(1,bufnr("$"))
+    if buflisted(nr)
+      let cnt += 1
+    endif
+  endfor
+  return cnt
+endfunction
 
-function! DWM_SyncBufs()
+function! s:DWM_SyncBufs()
   for nr in range(1,bufnr('$'))
     if buflisted(nr)
       if index(s:dwm_bufs,nr) == -1
@@ -55,15 +61,15 @@ function! DWM_SyncBufs()
   endfor
   for r_idx in range(1,len(s:dwm_bufs))
     let idx = len(s:dwm_bufs)-r_idx
-    if !(buflisted(s:dwm_bufs[idx])) 
+    if !(buflisted(s:dwm_bufs[idx]))
       " echo idx
-      call remove(s:dwm_bufs,idx) 
+      call remove(s:dwm_bufs,idx)
     endif
   endfor
   " echo s:dwm_bufs
 endfunction
 
-function! DWM_TopBuf(buffer)
+function! s:DWM_TopBuf(buffer)
   let b = a:buffer
   let idx = index(s:dwm_bufs,b)
   if idx != -1
@@ -74,11 +80,11 @@ function! DWM_TopBuf(buffer)
 endfunction
 
 
-function! DWM_Ball()
-  call DWM_SyncBufs()
+function! s:DWM_Ball()
+  call s:DWM_SyncBufs()
   exec 'sb ' . s:dwm_bufs[len(s:dwm_bufs)-1]
   on!
-  call DWM_SyncBufs()
+  call s:DWM_SyncBufs()
   if len(s:dwm_bufs) > 1
     for idx in range(1,len(s:dwm_bufs)-1)
       let r_idx = (len(s:dwm_bufs)-1) - idx
@@ -88,22 +94,22 @@ function! DWM_Ball()
 endfunction
 
 
-function! DWM_Full ()
+function! s:DWM_Full ()
   exec 'sb ' .  bufnr('%')
   on!
 endfunction
 
-function! DWM_New ()
-  call DWM_Ball()
+function! s:DWM_New ()
+  call s:DWM_Ball()
   vert topleft new
-  call DWM_SyncBufs()
-  call DWM_TopBuf(bufnr('%'))
+  call s:DWM_SyncBufs()
+  call s:DWM_TopBuf(bufnr('%'))
 endfunction
 
-function! DWM_Close()
+function! s:DWM_Close()
   bd
-  call DWM_Ball()
-  if DWM_BufCount() > 1  
+  call s:DWM_Ball()
+  if s:DWM_BufCount() > 1
     " we just called ball we are at the top buffer
     let cb = s:dwm_bufs[0]
     hide
@@ -111,10 +117,10 @@ function! DWM_Close()
   endif
 endfunction
 
-function! DWM_Focus()
-  call DWM_TopBuf(bufnr('%'))
-  call DWM_Ball()
-  if DWM_BufCount() > 1  
+function! s:DWM_Focus()
+  call s:DWM_TopBuf(bufnr('%'))
+  call s:DWM_Ball()
+  if s:DWM_BufCount() > 1
     " we just called ball we are at the top buffer
     let cb = s:dwm_bufs[0]
     hide
@@ -128,14 +134,12 @@ if !exists('g:dwm_map_keys')
 endif
 
 if g:dwm_map_keys
-    map <C-N> :call DWM_New()<CR>
-    map <C-C> :call DWM_Close()<CR>
-    map <C-H> :call DWM_Focus()<CR>
-    map <C-L> :call DWM_Full()<CR>
-    " map <C-B> :call DWM_Ball()<CR>
+    map <C-N> DMWNew
+    map <C-C> DMWClose
+    map <C-H> DMWFocus
+    map <C-L> DMWFull
+    " map <C-B> DMWBall
     map <C-J> <C-W>w
     map <C-K> <C-W>W
     map <C-B> :ls<CR>
 endif
-
-
