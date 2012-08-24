@@ -134,11 +134,11 @@ if !exists('g:dwm_map_keys')
 endif
 
 if g:dwm_map_keys
-    map <C-N> DMWNew
-    map <C-C> DMWClose
-    map <C-H> DMWFocus
-    map <C-L> DMWFull
-    " map <C-B> DMWBall
+    map <C-N> :DMWNew
+    map <C-C> :DMWClose
+    map <C-H> :DMWFocus
+    map <C-L> :DMWFull
+    " map <C-B> :DMWBall
     map <C-J> <C-W>w
     map <C-K> <C-W>W
     map <C-B> :ls<CR>
