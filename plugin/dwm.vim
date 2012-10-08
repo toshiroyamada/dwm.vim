@@ -141,5 +141,5 @@ if g:dwm_map_keys
     " map <C-B> :DMWBall
     map <C-J> <C-W>w
     map <C-K> <C-W>W
-    map <C-B> :ls<CR>
+    " map <C-B> :ls<CR>
 endif
